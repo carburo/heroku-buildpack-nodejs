@@ -103,7 +103,7 @@ yarn_node_modules() {
   local build_dir=${1:-}
   local production=${YARN_PRODUCTION:-false}
 
-  if [[ "$(should_use_yarn_zero_install)" == "true" ]] then
+  if [[ "$(should_use_yarn_zero_install)" == "true" ]]; then
     return 0
 
   echo "Installing node modules (yarn.lock)"
@@ -114,7 +114,7 @@ yarn_node_modules() {
 yarn_prune_devdependencies() {
   local build_dir=${1:-} 
 
-  if [[ "$(should_use_yarn_zero_install)" == "true" ]] then
+  if [[ "$(should_use_yarn_zero_install)" == "true" ]]; then
     return 0
 
   if [ "$NODE_ENV" == "test" ]; then
