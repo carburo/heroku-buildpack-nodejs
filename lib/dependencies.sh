@@ -82,9 +82,29 @@ log_build_scripts() {
   meta_set "heroku-postbuild-script" "$(read_json "$build_dir/package.json" ".scripts[\"heroku-postbuild\"]")"
 }
 
+should_use_yarn_zero_install() {
+  local build_dir=${1:-}
+  local yarn_version
+
+  yarn_version=$(yarn --version)
+  # major_string will be ex: "4." "5." "10"
+  local major_string=${yarn_version:0:2}
+  # strip any "."s from major_string
+  local major=${major_string//.}
+
+  if (( major >= 2 )); then
+    echo "true"
+  else
+    echo "false"
+  fi
+}
+
 yarn_node_modules() {
   local build_dir=${1:-}
   local production=${YARN_PRODUCTION:-false}
+
+  if [[ "$(should_use_yarn_zero_install)" == "true" ]] then
+    return 0
 
   echo "Installing node modules (yarn.lock)"
   cd "$build_dir" || return
@@ -93,6 +113,9 @@ yarn_node_modules() {
 
 yarn_prune_devdependencies() {
   local build_dir=${1:-} 
+
+  if [[ "$(should_use_yarn_zero_install)" == "true" ]] then
+    return 0
 
   if [ "$NODE_ENV" == "test" ]; then
     echo "Skipping because NODE_ENV is 'test'"
