@@ -105,6 +105,7 @@ yarn_node_modules() {
 
   if [[ "$(should_use_yarn_zero_install)" == "true" ]]; then
     return 0
+  fi
 
   echo "Installing node modules (yarn.lock)"
   cd "$build_dir" || return
@@ -116,6 +117,7 @@ yarn_prune_devdependencies() {
 
   if [[ "$(should_use_yarn_zero_install)" == "true" ]]; then
     return 0
+  fi
 
   if [ "$NODE_ENV" == "test" ]; then
     echo "Skipping because NODE_ENV is 'test'"
